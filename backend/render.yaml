@@ -1,17 +1,15 @@
-# Render Blueprint Specification for Previa (PVFC)
-# Pre-Visit Financial Clearance System
-# Docs: https://render.com/docs/blueprint-spec
+# Render Blueprint Specification for Previa Backend
+# Documentation: https://render.com/docs/blueprint-spec
 
 services:
   # ---------------------------------------------------------------------------
-  # 1. Backend REST API Web Service (FastAPI + Python)
+  # FastAPI REST API Backend Service
   # ---------------------------------------------------------------------------
   - type: web
     name: previa-backend
     runtime: python
     plan: free
     region: oregon
-    rootDir: backend
     buildCommand: pip install --upgrade pip && pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
@@ -29,30 +27,6 @@ services:
         fromDatabase:
           name: previa-postgres
           property: connectionString
-
-  # ---------------------------------------------------------------------------
-  # 2. Frontend Static Site (Vite Single Page Application)
-  # ---------------------------------------------------------------------------
-  - type: static
-    name: previa-frontend
-    plan: free
-    region: oregon
-    rootDir: frontend
-    buildCommand: npm install && npm run build:vite
-    staticPublishPath: dist
-    autoDeploy: true
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    envVars:
-      - key: NODE_VERSION
-        value: 20.18.0
-      - key: VITE_API_URL
-        fromService:
-          type: web
-          name: previa-backend
-          property: host
 
 # -----------------------------------------------------------------------------
 # Managed PostgreSQL Database

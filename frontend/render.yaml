@@ -1,0 +1,23 @@
+# Render Blueprint Specification for Previa Frontend (Static Site)
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  # ---------------------------------------------------------------------------
+  # Frontend Static Site (Vite Single Page Application)
+  # ---------------------------------------------------------------------------
+  - type: static
+    name: previa-frontend
+    plan: free
+    region: oregon
+    buildCommand: npm install && npm run build:vite
+    staticPublishPath: dist
+    autoDeploy: true
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: VITE_API_URL
+        value: https://previa-backend.onrender.com
