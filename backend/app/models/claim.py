@@ -34,4 +34,8 @@ class Claim(Base):
     explanation: Mapped[str] = mapped_column(Text, nullable=True)
     recommendation: Mapped[str] = mapped_column(Text, nullable=True)
     
+    account_id: Mapped[str] = mapped_column(String(64), default="acc-apollo", index=True, nullable=True)
+    payer_name: Mapped[str] = mapped_column(String(128), default="Commercial PPO", nullable=True)
+    last_analyzed_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))

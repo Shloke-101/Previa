@@ -6,6 +6,13 @@ from app.models.clearance import ClearanceRecord
 from app.models.denial import DenialRecord
 from app.models.rule import PreventiveRule
 from app.models.self_heal import SelfHealProblem, SelfHealAuditEvent, SelfHealRule, PayerRuleDriftRecord
+from app.models.document import (
+    DocumentRecord,
+    DocumentPageRecord,
+    ExtractedFieldRecord,
+    DocumentReviewRecord,
+    DocumentAuditEventRecord
+)
 
 __all__ = [
     "Patient",
@@ -19,4 +26,9 @@ __all__ = [
     "SelfHealAuditEvent",
     "SelfHealRule",
     "PayerRuleDriftRecord",
+    "DocumentRecord",
+    "DocumentPageRecord",
+    "ExtractedFieldRecord",
+    "DocumentReviewRecord",
+    "DocumentAuditEventRecord"
 ]

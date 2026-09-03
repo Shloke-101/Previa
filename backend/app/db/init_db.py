@@ -10,16 +10,33 @@ from app.models.clearance import ClearanceRecord
 from app.models.denial import DenialRecord
 from app.models.rule import PreventiveRule
 from app.models.self_heal import SelfHealProblem, SelfHealAuditEvent, SelfHealRule, PayerRuleDriftRecord
+from app.models.document import DocumentRecord, DocumentAuditEventRecord
 
 def init_db(db: Session) -> None:
     """Creates tables and seeds initial synthetic data if empty."""
     Base.metadata.create_all(bind=engine)
+
+    # Ensure added columns exist in sqlite if created before schema update
+    from sqlalchemy import text
+    with engine.connect() as conn:
+        for col_def in [
+            "ALTER TABLE claims ADD COLUMN account_id VARCHAR(64)",
+            "ALTER TABLE claims ADD COLUMN payer_name VARCHAR(255)",
+            "ALTER TABLE claims ADD COLUMN last_analyzed_at VARCHAR(64)"
+        ]:
+            try:
+                conn.execute(text(col_def))
+                conn.commit()
+            except Exception:
+                pass
 
     # Check if already seeded
     if db.query(Patient).first():
         # Check if self-healing tables need seeding
         if not db.query(SelfHealProblem).first():
             _seed_self_heal_data(db)
+        if not db.query(DocumentRecord).first():
+            _seed_document_records(db)
         return
 
     # 1. Seed Patients
@@ -400,3 +417,103 @@ def _seed_self_heal_data(db: Session) -> None:
     ]
     db.add_all(drifts)
     db.commit()
+
+    # Seed initial documents
+    _seed_document_records(db)
+
+def _seed_document_records(db: Session) -> None:
+    """Seeds baseline synthetic documents for demonstration."""
+    now = datetime.now(timezone.utc)
+    docs = [
+        DocumentRecord(
+            id="DOC-10482",
+            filename="Insurance_Card_Eleanor_Vance.pdf",
+            file_type="PDF",
+            file_size_bytes=142050,
+            file_hash="hash_eleanor_vance_card",
+            document_type="INSURANCE_CARD",
+            type_confidence=0.99,
+            ocr_engine="PyMuPDF+AdaptiveParser",
+            ocr_confidence=0.98,
+            quality_score=0.98,
+            page_count=1,
+            raw_text="STAR HEALTH INSURANCE\nPATIENT: ELEANOR VANCE\nDOB: 14/06/1984\nMEMBER ID: STAR-9823101\nGROUP: GRP-4410",
+            status="VERIFIED",
+            patient_id="PAT-1082",
+            patient_name="Eleanor Vance",
+            member_id="STAR-9823101",
+            payer_name="Star Health & Allied Insurance",
+            group_number="GRP-4410",
+            effective_date="2026-01-01",
+            expiration_date="2026-12-31",
+            is_expired=False,
+            is_duplicate=False,
+            identity_status="MATCH",
+            identity_confidence=0.98,
+            auto_resolved=True,
+            claim_protected=True,
+            created_at=now - timedelta(hours=2)
+        ),
+        DocumentRecord(
+            id="DOC-10483",
+            filename="Prior_Auth_Approval_72148.pdf",
+            file_type="PDF",
+            file_size_bytes=98320,
+            file_hash="hash_auth_eleanor_vance",
+            document_type="AUTHORIZATION",
+            type_confidence=0.98,
+            ocr_engine="PyMuPDF+AdaptiveParser",
+            ocr_confidence=0.97,
+            quality_score=0.97,
+            page_count=1,
+            raw_text="BLUE CROSS BLUE SHIELD\nPRIOR AUTHORIZATION DETERMINATION: APPROVED\nAUTH #: AUTH-BCBS-99104\nPATIENT: ELEANOR VANCE\nPROCEDURE: 72148 MRI LUMBAR SPINE",
+            status="VERIFIED",
+            patient_id="PAT-1082",
+            patient_name="Eleanor Vance",
+            member_id="BCBS-9823101",
+            payer_name="Blue Cross Blue Shield",
+            group_number="GRP-4410",
+            auth_number="AUTH-BCBS-99104",
+            effective_date="2026-08-01",
+            expiration_date="2026-11-30",
+            is_expired=False,
+            is_duplicate=False,
+            identity_status="MATCH",
+            identity_confidence=0.99,
+            auto_resolved=True,
+            claim_protected=True,
+            created_at=now - timedelta(hours=5)
+        ),
+        DocumentRecord(
+            id="DOC-10484",
+            filename="EOB_Remittance_Advice_CLM28490.pdf",
+            file_type="PDF",
+            file_size_bytes=184320,
+            file_hash="hash_eob_marcus_chen",
+            document_type="EOB",
+            type_confidence=0.97,
+            ocr_engine="PyMuPDF+AdaptiveParser",
+            ocr_confidence=0.94,
+            quality_score=0.94,
+            page_count=2,
+            raw_text="UNITEDHEALTHCARE EXPLANATION OF BENEFITS\nPATIENT: MARCUS CHEN\nBILLED: $12,750.00\nDENIAL: CO-197 MISSING PRIOR AUTH",
+            status="REVIEW_REQUIRED",
+            patient_id="PAT-5229",
+            patient_name="Marcus Chen",
+            member_id="HUM-110294",
+            payer_name="UnitedHealthcare",
+            group_number="GRP-1004",
+            effective_date="2025-01-01",
+            expiration_date="2026-08-31",
+            is_expired=True,
+            is_duplicate=False,
+            identity_status="MATCH",
+            identity_confidence=0.95,
+            auto_resolved=False,
+            claim_protected=False,
+            created_at=now - timedelta(days=1)
+        )
+    ]
+    db.add_all(docs)
+    db.commit()
+
