@@ -3,16 +3,21 @@ import './styles/base.css';
 import './styles/components.css';
 import './styles/views.css';
 
-import { renderNavbar } from './components/navbar';
+import { renderSidebar } from './components/sidebar';
+import { renderTopbar } from './components/topbar';
+import { renderDashboardView } from './components/dashboardView';
 import { renderQueueView } from './components/queueView';
+import { renderRootCauseView } from './components/rootCauseView';
+import { renderWorkflowView } from './components/workflowView';
 import { renderOcrView } from './components/ocrView';
 import { renderDossierView } from './components/dossierView';
 import { renderAnalyticsView } from './components/analyticsView';
+import { renderRulesView } from './components/rulesView';
 import { clearanceStore } from './services/clearanceEngine';
 
 class App {
   private root: HTMLElement;
-  private currentTab: string = 'queue';
+  private currentTab: string = 'dashboard';
 
   constructor() {
     const appElement = document.getElementById('app');
@@ -28,7 +33,10 @@ class App {
   public setTab(tab: string): void {
     this.currentTab = tab;
     this.render();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const stage = document.querySelector('.main-stage');
+    if (stage) {
+      stage.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   public selectPatient(patientId: string): void {
@@ -43,15 +51,45 @@ class App {
   private render(): void {
     this.root.innerHTML = '';
 
-    // Render Global Navbar
-    const navbar = renderNavbar(this.currentTab, (tab) => this.setTab(tab));
-    this.root.appendChild(navbar);
+    const queue = clearanceStore.getQueue();
+    const highRisk = queue.filter(q => q.clearance_status === 'HIGH_RISK').length;
+    const needsAction = queue.filter(q => q.clearance_status === 'NEEDS_ACTION').length;
 
-    // Main Content View Container
+    const shell = document.createElement('div');
+    shell.className = 'app-shell';
+
+    // 1. Sidebar
+    const sidebar = renderSidebar(
+      this.currentTab,
+      (tab) => this.setTab(tab),
+      { highRisk, needsAction, total: queue.length }
+    );
+    shell.appendChild(sidebar);
+
+    // 2. Main Stage (TopBar + Content View)
+    const stage = document.createElement('div');
+    stage.className = 'main-stage';
+
+    const topbar = renderTopbar(this.currentTab, (action) => {
+      if (action === 'reverify') {
+        this.render();
+      }
+    });
+    stage.appendChild(topbar);
+
     const main = document.createElement('main');
     main.className = 'main-content';
 
     switch (this.currentTab) {
+      case 'dashboard':
+        main.appendChild(
+          renderDashboardView(
+            (tab) => this.setTab(tab),
+            (patientId) => this.selectPatient(patientId)
+          )
+        );
+        break;
+
       case 'queue':
         main.appendChild(
           renderQueueView(
@@ -59,6 +97,14 @@ class App {
             (patientId) => this.openOcrIntake(patientId)
           )
         );
+        break;
+
+      case 'root-cause':
+        main.appendChild(renderRootCauseView((tab) => this.setTab(tab)));
+        break;
+
+      case 'workflow':
+        main.appendChild(renderWorkflowView((tab) => this.setTab(tab)));
         break;
 
       case 'ocr':
@@ -80,22 +126,28 @@ class App {
         main.appendChild(renderAnalyticsView());
         break;
 
+      case 'rules':
+        main.appendChild(renderRulesView());
+        break;
+
       default:
         main.appendChild(
-          renderQueueView(
-            (patientId) => this.selectPatient(patientId),
-            (patientId) => this.openOcrIntake(patientId)
+          renderDashboardView(
+            (tab) => this.setTab(tab),
+            (patientId) => this.selectPatient(patientId)
           )
         );
     }
 
-    this.root.appendChild(main);
+    stage.appendChild(main);
+    shell.appendChild(stage);
+    this.root.appendChild(shell);
 
     // Ensure Toast Container exists
     if (!document.getElementById('toast-container')) {
       const toastContainer = document.createElement('div');
       toastContainer.id = 'toast-container';
-      this.root.appendChild(toastContainer);
+      document.body.appendChild(toastContainer);
     }
   }
 }

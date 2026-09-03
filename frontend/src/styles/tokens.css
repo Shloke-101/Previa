@@ -1,61 +1,90 @@
 :root {
-  /* Color Palette - Deep Medical Glass */
-  --bg-primary: #0a0f1d;
-  --bg-secondary: #0f172a;
+  /* Core Backgrounds - Deep Navy Enterprise */
+  --bg-primary: #060b14;
+  --bg-secondary: #0b1120;
+  --bg-tertiary: #111a2e;
   --bg-surface: rgba(15, 23, 42, 0.65);
-  --bg-surface-elevated: rgba(30, 41, 59, 0.6);
-  --bg-surface-hover: rgba(51, 65, 85, 0.5);
+  --bg-surface-elevated: rgba(26, 38, 64, 0.7);
+  --bg-surface-hover: rgba(38, 53, 86, 0.5);
 
-  /* Glassmorphism Accents */
-  --glass-bg: rgba(255, 255, 255, 0.05);
+  /* Glassmorphism System */
   --glass-bg-subtle: rgba(255, 255, 255, 0.02);
-  --glass-bg-hover: rgba(255, 255, 255, 0.09);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg-hover: rgba(255, 255, 255, 0.08);
   --glass-bg-active: rgba(255, 255, 255, 0.12);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-border-light: rgba(255, 255, 255, 0.2);
-  --glass-border-glow: rgba(99, 102, 241, 0.4);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --glass-shadow-lg: 0 20px 48px 0 rgba(0, 0, 0, 0.5);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-border-light: rgba(255, 255, 255, 0.18);
+  --glass-border-glow: rgba(56, 189, 248, 0.4);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+  --glass-shadow-lg: 0 20px 48px 0 rgba(0, 0, 0, 0.55);
   --glass-blur: blur(16px);
   --glass-blur-lg: blur(24px);
 
-  /* Neon Brand Accents */
-  --primary: #6366f1;
-  --primary-light: #818cf8;
-  --primary-glow: rgba(99, 102, 241, 0.3);
-  --cyan: #06b6d4;
-  --cyan-glow: rgba(6, 182, 212, 0.3);
-  
+  /* Semantic Brand Palette */
+  --primary: #38bdf8;          /* Cyan: AI / Information / Primary interaction */
+  --primary-light: #7dd3fc;
+  --primary-glow: rgba(56, 189, 248, 0.35);
+
+  --secondary: #6366f1;        /* Indigo: Analytics / Intelligence */
+  --secondary-light: #818cf8;
+  --secondary-glow: rgba(99, 102, 241, 0.35);
+
+  --accent: #8b5cf6;           /* Purple: Advanced AI / Recommendations */
+  --accent-light: #a78bfa;
+  --accent-glow: rgba(139, 92, 246, 0.35);
+
   /* Status Colors */
-  --status-cleared: #10b981;
-  --status-cleared-bg: rgba(16, 185, 129, 0.15);
-  --status-cleared-border: rgba(16, 185, 129, 0.35);
-  --status-cleared-glow: 0 0 20px rgba(16, 185, 129, 0.3);
+  --success: #22c55e;          /* Green: Approved / Cleared / Recovered */
+  --success-light: #4ade80;
+  --success-bg: rgba(34, 197, 94, 0.12);
+  --success-border: rgba(34, 197, 94, 0.32);
+  --success-glow: 0 0 20px rgba(34, 197, 94, 0.25);
 
-  --status-action: #f59e0b;
-  --status-action-bg: rgba(245, 158, 11, 0.15);
-  --status-action-border: rgba(245, 158, 11, 0.35);
-  --status-action-glow: 0 0 20px rgba(245, 158, 11, 0.3);
+  --warning: #f59e0b;          /* Yellow/Amber: Pending / Action Needed */
+  --warning-light: #fbbf24;
+  --warning-bg: rgba(245, 158, 11, 0.12);
+  --warning-border: rgba(245, 158, 11, 0.32);
+  --warning-glow: 0 0 20px rgba(245, 158, 11, 0.25);
 
-  --status-risk: #f43f5e;
-  --status-risk-bg: rgba(244, 63, 94, 0.15);
-  --status-risk-border: rgba(244, 63, 94, 0.35);
-  --status-risk-glow: 0 0 20px rgba(244, 63, 94, 0.3);
+  --danger: #ef4444;           /* Red: Denied / Critical Risk / Blocker */
+  --danger-light: #f87171;
+  --danger-bg: rgba(239, 68, 68, 0.12);
+  --danger-border: rgba(239, 68, 68, 0.32);
+  --danger-glow: 0 0 20px rgba(239, 68, 68, 0.25);
 
-  /* Typography Colors */
+  /* Status Tokens for Legacy & View Classes */
+  --status-cleared: var(--success);
+  --status-cleared-bg: var(--success-bg);
+  --status-cleared-border: var(--success-border);
+  --status-cleared-glow: var(--success-glow);
+
+  --status-action: var(--warning);
+  --status-action-bg: var(--warning-bg);
+  --status-action-border: var(--warning-border);
+  --status-action-glow: var(--warning-glow);
+
+  --status-risk: var(--danger);
+  --status-risk-bg: var(--danger-bg);
+  --status-risk-border: var(--danger-border);
+  --status-risk-glow: var(--danger-glow);
+
+  /* Typography */
   --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --text-dim: #64748b;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-dim: #475569;
   --text-accent: #38bdf8;
 
   /* Sizing & Radius */
+  --radius-xs: 6px;
   --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
   --radius-full: 9999px;
 
   /* Transitions */
-  --transition-fast: 0.15s ease;
+  --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-slow: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }

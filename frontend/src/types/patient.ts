@@ -16,7 +16,7 @@ export interface PatientDossier {
     plan_name: string;
     member_id: string;
     group_number: string;
-    policy_status: 'ACTIVE' | 'INACTIVE' | 'PENDING';
+    policy_status: 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'TERMINATED';
     effective_date: string;
     expiration_date: string;
     in_network: boolean;

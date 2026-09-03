@@ -1,4 +1,4 @@
-import { ClearanceItem, ClearanceStatus, AuthorizationStatus } from '../types/clearance';
+import { ClearanceItem } from '../types/clearance';
 import { PatientDossier } from '../types/patient';
 import {
   mockClearanceItems,

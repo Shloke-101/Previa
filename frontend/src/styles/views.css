@@ -1,13 +1,135 @@
 /* ==========================================================================
-   VIEW 1: PRIORITY CLEARANCE WORKLIST QUEUE
+   PREVIA DESIGN SYSTEM — MASTER VIEWS STYLING
    ========================================================================== */
 
-.stats-grid {
+/* --------------------------------------------------------------------------
+   VIEW 0: EXECUTIVE AI COMMAND CENTER (DASHBOARD)
+   -------------------------------------------------------------------------- */
+
+.pipeline-banner {
+  padding: 1.5rem 1.75rem;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 27, 75, 0.4) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: var(--radius-lg);
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.pipeline-flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.pipeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 130px;
+  padding: 0.85rem 0.65rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.pipeline-step:hover {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-2px);
+}
+
+.pipeline-step.active-step {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.18) 0%, rgba(99, 102, 241, 0.15) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+}
+
+.pipeline-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.45rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: #38bdf8;
+}
+
+.pipeline-step-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fff;
+}
+
+.pipeline-step-sub {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.pipeline-arrow {
+  color: var(--primary);
+  font-size: 1.25rem;
+  opacity: 0.6;
+  flex-shrink: 0;
+  animation: pulseArrow 2s infinite ease-in-out;
+}
+
+@keyframes pulseArrow {
+  0%, 100% { transform: translateX(0); opacity: 0.4; }
+  50% { transform: translateX(3px); opacity: 1; color: #38bdf8; }
+}
+
+.dashboard-split-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 1.75rem;
   margin-bottom: 2rem;
 }
+
+@media (max-width: 1200px) {
+  .dashboard-split-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.threat-stream-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.threat-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.15rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.threat-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* --------------------------------------------------------------------------
+   VIEW 1: PRIORITY CLEARANCE WORKLIST QUEUE
+   -------------------------------------------------------------------------- */
 
 .queue-controls-bar {
   display: flex;
@@ -15,7 +137,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
-  padding: 1.25rem;
+  padding: 1.15rem 1.35rem;
   margin-bottom: 1.5rem;
 }
 
@@ -24,11 +146,33 @@
   align-items: center;
   gap: 0.75rem;
   flex: 1;
-  max-width: 600px;
+}
+
+.filter-pill-btn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.filter-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.filter-pill-btn.active {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .queue-table-container {
   overflow-x: auto;
+  border-radius: var(--radius-lg);
 }
 
 .queue-table {
@@ -39,18 +183,19 @@
 
 .queue-table th {
   padding: 1rem 1.25rem;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   border-bottom: 1px solid var(--glass-border);
-  background: rgba(15, 23, 42, 0.4);
+  background: rgba(11, 17, 32, 0.8);
+  white-space: nowrap;
 }
 
 .queue-table td {
-  padding: 1.1rem 1.25rem;
-  font-size: 0.875rem;
+  padding: 1.05rem 1.25rem;
+  font-size: 0.85rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   vertical-align: middle;
 }
@@ -66,17 +211,18 @@
 .patient-cell {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.18rem;
 }
 
 .patient-name {
   font-weight: 700;
   color: #fff;
+  font-size: 0.92rem;
 }
 
 .patient-meta {
   font-size: 0.75rem;
-  color: var(--text-dim);
+  color: var(--text-muted);
 }
 
 .risk-pill {
@@ -84,20 +230,171 @@
   align-items: center;
   gap: 0.4rem;
   font-weight: 700;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
 }
 
-.risk-pill.low { color: #34d399; }
-.risk-pill.medium { color: #fbbf24; }
-.risk-pill.high { color: #fb7185; }
+.risk-pill.low {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
 
-/* ==========================================================================
-   VIEW 2: INSURANCE OCR & DATA EXTRACTION COMPARATOR
-   ========================================================================== */
+.risk-pill.medium {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.risk-pill.high {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   VIEW 2: ROOT CAUSE ANALYSIS (RCA) — THE SIGNATURE DIFFERENTIATOR
+   -------------------------------------------------------------------------- */
+
+.rca-hero-container {
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 27, 75, 0.6) 50%, rgba(6, 11, 20, 0.9) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: var(--radius-lg);
+  margin-bottom: 2rem;
+  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15);
+  position: relative;
+}
+
+.rca-flow-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1rem;
+  margin: 1.75rem 0 1rem 0;
+  position: relative;
+}
+
+@media (max-width: 1200px) {
+  .rca-flow-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .rca-flow-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rca-node-card {
+  padding: 1.25rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  position: relative;
+  transition: all var(--transition-normal);
+}
+
+.rca-node-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2);
+}
+
+.rca-node-step {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #38bdf8;
+  margin-bottom: 0.45rem;
+}
+
+.rca-node-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.rca-node-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+.rca-node-highlight {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-top: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   VIEW 3: WORKFLOW OPTIMIZATION (BEFORE VS AFTER)
+   -------------------------------------------------------------------------- */
+
+.workflow-comparison-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.75rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 992px) {
+  .workflow-comparison-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.workflow-box {
+  padding: 1.75rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.workflow-box.legacy {
+  background: rgba(239, 68, 68, 0.04);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.workflow-box.optimized {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(56, 189, 248, 0.08) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 8px 32px rgba(56, 189, 248, 0.12);
+}
+
+.step-card {
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.down-arrow-indicator {
+  display: flex;
+  justify-content: center;
+  color: var(--text-dim);
+  font-size: 1rem;
+  margin: -0.4rem 0;
+}
+
+/* --------------------------------------------------------------------------
+   VIEW 4: INSURANCE OCR & INTAKE SCANNER
+   -------------------------------------------------------------------------- */
 
 .ocr-container {
   display: grid;
-  grid-template-columns: 1fr 1.1fr;
+  grid-template-columns: 1fr 1.15fr;
   gap: 1.75rem;
 }
 
@@ -108,10 +405,10 @@
 }
 
 .card-preview-wrapper {
-  padding: 1.5rem;
+  padding: 1.75rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .insurance-card-mockup {
@@ -127,68 +424,56 @@
 }
 
 .card-chip {
-  width: 40px;
-  height: 30px;
-  border-radius: 6px;
+  width: 38px;
+  height: 28px;
+  border-radius: 5px;
   background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-  margin-bottom: 1rem;
 }
 
 .ocr-bounding-box {
   position: absolute;
-  border: 2px dashed rgba(6, 182, 212, 0.8);
-  background: rgba(6, 182, 212, 0.15);
+  border: 2px dashed rgba(56, 189, 248, 0.8);
+  background: rgba(56, 189, 248, 0.15);
   border-radius: 4px;
-  animation: pulseBox 2s infinite ease-in-out;
+  animation: pulseBox 2.5s infinite ease-in-out;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
-.ocr-bounding-box:hover {
-  background: rgba(6, 182, 212, 0.3);
-  border-color: #38bdf8;
-}
-
-.ocr-bounding-box.active {
+.ocr-bounding-box:hover, .ocr-bounding-box.active {
   border-style: solid;
   border-color: #38bdf8;
   background: rgba(56, 189, 248, 0.35);
-  box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.55);
 }
 
 @keyframes pulseBox {
   0%, 100% { opacity: 0.85; }
-  50% { opacity: 0.5; }
+  50% { opacity: 0.45; }
 }
 
 .comparison-table-wrapper {
-  padding: 1.5rem;
+  padding: 1.75rem;
 }
 
 .comparison-row {
   display: grid;
-  grid-template-columns: 120px 1fr 1fr auto;
+  grid-template-columns: 130px 1fr 1fr auto;
   align-items: center;
   gap: 1rem;
-  padding: 0.85rem 0.5rem;
+  padding: 0.85rem 0.6rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background var(--transition-fast);
+  border-radius: var(--radius-xs);
 }
 
-.field-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--text-muted);
+.comparison-row:hover {
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.field-val {
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-/* ==========================================================================
-   VIEW 3: PATIENT CLEARANCE DOSSIER
-   ========================================================================== */
+/* --------------------------------------------------------------------------
+   VIEW 5: PATIENT CLEARANCE DOSSIER & RISK BREAKDOWN
+   -------------------------------------------------------------------------- */
 
 .dossier-grid {
   display: grid;
@@ -209,7 +494,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 
 .dossier-patient-info {
@@ -222,19 +507,18 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+  background: linear-gradient(135deg, #38bdf8 0%, #6366f1 50%, #8b5cf6 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 800;
   color: #fff;
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.35);
 }
 
-/* Risk Score Meter & Factor Bars */
 .risk-gauge-card {
-  padding: 1.5rem;
+  padding: 1.75rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -277,16 +561,17 @@
 }
 
 .gauge-score {
-  font-size: 2.25rem;
+  font-size: 2.35rem;
   font-weight: 900;
   line-height: 1;
 }
 
 .gauge-tier {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
+  margin-top: 4px;
 }
 
 .risk-factor-list {
@@ -294,7 +579,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  margin-top: 1rem;
+  margin-top: 1.25rem;
 }
 
 .risk-factor-item {
@@ -325,7 +610,6 @@
   transition: width 0.6s ease;
 }
 
-/* Financial Breakdown Card */
 .financial-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -336,7 +620,7 @@
 .financial-metric {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--glass-border);
-  padding: 1rem;
+  padding: 1.15rem;
   border-radius: var(--radius-md);
 }
 
@@ -352,9 +636,9 @@
   color: #fff;
 }
 
-/* ==========================================================================
-   VIEW 4: ROOT CAUSE DENIAL ANALYTICS & PREVENTIVE RULES
-   ========================================================================== */
+/* --------------------------------------------------------------------------
+   VIEW 6: DENIAL ANALYTICS & PAYER INTEL
+   -------------------------------------------------------------------------- */
 
 .analytics-grid {
   display: grid;
@@ -370,66 +654,57 @@
 }
 
 .analytics-card {
-  padding: 1.5rem;
+  padding: 1.75rem;
 }
 
 .analytics-title {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   margin-bottom: 1.25rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.bar-chart-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.85rem;
-}
-
-.bar-chart-label {
-  width: 160px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-muted);
+  gap: 0.65rem;
 }
 
 .bar-chart-track {
-  flex: 1;
-  height: 10px;
+  width: 100%;
+  height: 8px;
   background: rgba(255, 255, 255, 0.06);
-  border-radius: 5px;
+  border-radius: 4px;
   overflow: hidden;
+  margin-top: 0.35rem;
 }
 
 .bar-chart-fill {
   height: 100%;
-  border-radius: 5px;
+  border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.bar-chart-value {
-  width: 45px;
-  text-align: right;
-  font-size: 0.8rem;
-  font-weight: 700;
-}
+/* --------------------------------------------------------------------------
+   VIEW 7: PREVENTIVE RULES ENGINE
+   -------------------------------------------------------------------------- */
 
 .rule-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.1rem;
+  padding: 1.25rem;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   margin-bottom: 0.85rem;
+  transition: all var(--transition-fast);
+}
+
+.rule-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .toggle-switch {
   position: relative;
-  width: 46px;
+  width: 44px;
   height: 24px;
 }
 
@@ -447,7 +722,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(255, 255, 255, 0.15);
-  transition: 0.3s;
+  transition: 0.25s ease;
   border-radius: 24px;
 }
 
@@ -459,14 +734,14 @@
   left: 3px;
   bottom: 3px;
   background-color: white;
-  transition: 0.3s;
+  transition: 0.25s ease;
   border-radius: 50%;
 }
 
 .toggle-switch input:checked + .toggle-slider {
-  background-color: #6366f1;
+  background-color: #38bdf8;
 }
 
 .toggle-switch input:checked + .toggle-slider:before {
-  transform: translateX(22px);
+  transform: translateX(20px);
 }
