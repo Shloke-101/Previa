@@ -3,13 +3,18 @@ from sqlalchemy.orm import sessionmaker, Session
 from typing import Generator
 from app.core.config import settings
 
+# Normalize Render/Heroku postgres:// URLs for SQLAlchemy 2.0+
+db_url = settings.DATABASE_URL
+if db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
 # SQLite connection args vs Postgres
 connect_args = {}
-if settings.DATABASE_URL.startswith("sqlite"):
+if db_url.startswith("sqlite"):
     connect_args = {"check_same_thread": False}
 
 engine = create_engine(
-    settings.DATABASE_URL,
+    db_url,
     connect_args=connect_args,
     echo=False
 )
