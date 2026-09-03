@@ -64,7 +64,9 @@ Thumbs.db
 *.swp
 *.swo
 
-# Docker
+# Database & Docker
+*.db
+*.sqlite3
 docker-data/
 postgres_data/
 
