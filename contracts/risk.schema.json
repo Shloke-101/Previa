@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RiskAssessment",
+  "description": "Canonical schema for deterministic, explainable risk score evaluation (F08, F09)",
+  "type": "object",
+  "required": [
+    "assessment_id",
+    "patient_id",
+    "appointment_id",
+    "risk_score",
+    "risk_level",
+    "factors"
+  ],
+  "properties": {
+    "assessment_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "patient_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "appointment_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "risk_score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Deterministic calculated score from 0 (lowest risk) to 100 (highest risk)"
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": ["LOW", "MEDIUM", "HIGH"],
+      "description": "LOW: 0-39, MEDIUM: 40-69, HIGH: 70-100"
+    },
+    "factors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["factor_code", "reason", "impact"],
+        "properties": {
+          "factor_code": {
+            "type": "string",
+            "enum": [
+              "inactive_insurance",
+              "expired_policy",
+              "missing_authorization",
+              "critical_member_id_mismatch",
+              "policy_number_mismatch",
+              "dob_mismatch",
+              "out_of_network",
+              "policy_expiring_soon",
+              "minor_name_mismatch",
+              "coverage_restriction",
+              "missing_referral"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "description": "Human-readable explanation of the risk contributor"
+          },
+          "impact": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Numerical contribution of this factor to the total risk score"
+          }
+        }
+      }
+    },
+    "summary_explanation": {
+      "type": "string",
+      "description": "Natural language or rule-based narrative summary of the encounter's risk profile"
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

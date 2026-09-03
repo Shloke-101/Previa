@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PriorAuthorization",
+  "description": "Canonical schema for Prior Authorization status and requirements (F05)",
+  "type": "object",
+  "required": [
+    "authorization_id",
+    "patient_id",
+    "procedure_code",
+    "authorization_required",
+    "authorization_status"
+  ],
+  "properties": {
+    "authorization_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "patient_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "insurance_policy_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "appointment_id": {
+      "type": ["string", "null"],
+      "format": "uuid"
+    },
+    "procedure_code": {
+      "type": "string",
+      "description": "CPT code requiring auth"
+    },
+    "authorization_required": {
+      "type": "boolean",
+      "description": "True if procedure mandates prior authorization by payer"
+    },
+    "authorization_status": {
+      "type": "string",
+      "enum": ["NOT_REQUIRED", "REQUIRED", "PENDING", "APPROVED", "DENIED"],
+      "description": "Current status of the prior authorization"
+    },
+    "authorization_number": {
+      "type": ["string", "null"],
+      "description": "Payer-assigned auth number if APPROVED"
+    },
+    "valid_from": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "valid_to": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

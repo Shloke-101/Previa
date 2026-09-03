@@ -1,0 +1,480 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Previa (PVFC) - Canonical REST API Contract",
+    "description": "Pre-Visit Financial Clearance System REST API contract consumed across Frontend, Backend, and AI services.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Local Development Server"
+    }
+  ],
+  "paths": {
+    "/api/patients": {
+      "get": {
+        "summary": "List patients",
+        "parameters": [
+          { "name": "skip", "in": "query", "schema": { "type": "integer", "default": 0 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 50 } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of patients",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "./patient.schema.json" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Register a new synthetic patient",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "./patient.schema.json" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created patient",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "./patient.schema.json" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/patients/{patient_id}": {
+      "get": {
+        "summary": "Get patient details",
+        "parameters": [
+          { "name": "patient_id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Patient detail",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "./patient.schema.json" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/appointments": {
+      "get": {
+        "summary": "List upcoming appointments",
+        "parameters": [
+          { "name": "date", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "department", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of appointments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "./appointment.schema.json" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new appointment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "./appointment.schema.json" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created appointment",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "./appointment.schema.json" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ocr/insurance-card": {
+      "post": {
+        "summary": "Upload and extract insurance card details via OCR (F02)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "patient_id": { "type": "string" },
+                  "card_image": { "type": "string", "format": "binary" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OCR extraction result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "extracted_data": { "$ref": "./insurance.schema.json" },
+                    "ocr_confidence": { "type": "number" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/validation/insurance": {
+      "post": {
+        "summary": "Validate OCR card data against hospital patient record (F03)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["patient_id", "card_data"],
+                "properties": {
+                  "patient_id": { "type": "string" },
+                  "card_data": { "type": "object" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validation field-level analysis",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "patient_id": { "type": "string" },
+                    "validation_status": { "type": "string", "enum": ["MATCH", "PARTIAL_MATCH", "MISMATCH"] },
+                    "field_validations": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/eligibility/verify": {
+      "post": {
+        "summary": "Real-time insurance eligibility verification (F01)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["patient_id", "insurance_policy_id"],
+                "properties": {
+                  "patient_id": { "type": "string" },
+                  "insurance_policy_id": { "type": "string" },
+                  "appointment_id": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Eligibility determination",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "./eligibility.schema.json" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/coverage/check": {
+      "post": {
+        "summary": "Procedure coverage verification (F04, F06)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["patient_id", "insurance_policy_id", "procedure_code"],
+                "properties": {
+                  "patient_id": { "type": "string" },
+                  "insurance_policy_id": { "type": "string" },
+                  "procedure_code": { "type": "string" },
+                  "appointment_id": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Coverage determination",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "./coverage.schema.json" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/financial/estimate": {
+      "post": {
+        "summary": "Patient financial responsibility estimation (F07)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["patient_id", "appointment_id"],
+                "properties": {
+                  "patient_id": { "type": "string" },
+                  "appointment_id": { "type": "string" },
+                  "procedure_cost": { "type": "number" },
+                  "coverage_percentage": { "type": "number" },
+                  "deductible_remaining": { "type": "number" },
+                  "copay": { "type": "number" },
+                  "coinsurance": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Estimated patient & payer responsibility",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "./financial.schema.json" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/risk/evaluate": {
+      "post": {
+        "summary": "Deterministic explainable risk calculation (F08, F09)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["patient_id", "appointment_id"],
+                "properties": {
+                  "patient_id": { "type": "string" },
+                  "appointment_id": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Risk assessment with contributing factor breakdown",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "./risk.schema.json" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/clearance/evaluate": {
+      "post": {
+        "summary": "Complete pre-visit financial clearance evaluation (F10)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["patient_id", "appointment_id"],
+                "properties": {
+                  "patient_id": { "type": "string" },
+                  "appointment_id": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Clearance determination and blockers",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "./clearance.schema.json" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/summary": {
+      "get": {
+        "summary": "Executive clearance summary metrics (F12)",
+        "responses": {
+          "200": {
+            "description": "Summary KPI card statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total_upcoming_patients": { "type": "integer" },
+                    "cleared_count": { "type": "integer" },
+                    "needs_action_count": { "type": "integer" },
+                    "high_risk_count": { "type": "integer" },
+                    "pending_verification_count": { "type": "integer" },
+                    "potential_financial_exposure": { "type": "number" },
+                    "prevented_denial_dollars": { "type": "number" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/priority": {
+      "get": {
+        "summary": "Ranked priority work queue for staff (F12)",
+        "responses": {
+          "200": {
+            "description": "Ranked list of patients requiring action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "./clearance.schema.json" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/denials": {
+      "get": {
+        "summary": "Historical denial analytics and category distribution (F13)",
+        "responses": {
+          "200": {
+            "description": "Historical denial dataset and aggregated metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "./denial.schema.json" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/root-causes": {
+      "get": {
+        "summary": "Identified systemic denial root causes (F13)",
+        "responses": {
+          "200": {
+            "description": "Clustered denial root causes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "object" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workflows/authorization": {
+      "post": {
+        "summary": "Trigger automated prior authorization remediation task (F14)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["patient_id", "appointment_id", "procedure_code"],
+                "properties": {
+                  "patient_id": { "type": "string" },
+                  "appointment_id": { "type": "string" },
+                  "procedure_code": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Initiated workflow task",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "./workflow.schema.json" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workflows/pending": {
+      "get": {
+        "summary": "List active preventive and corrective tasks (F14)",
+        "responses": {
+          "200": {
+            "description": "List of active workflow tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "./workflow.schema.json" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

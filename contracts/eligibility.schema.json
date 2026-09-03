@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EligibilityVerification",
+  "description": "Canonical schema for real-time payer eligibility verification requests and responses (F01)",
+  "type": "object",
+  "required": [
+    "verification_id",
+    "patient_id",
+    "insurance_policy_id",
+    "is_eligible",
+    "policy_status",
+    "verification_timestamp",
+    "payer_response_code"
+  ],
+  "properties": {
+    "verification_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique verification record ID"
+    },
+    "patient_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "insurance_policy_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "appointment_id": {
+      "type": ["string", "null"],
+      "format": "uuid"
+    },
+    "is_eligible": {
+      "type": "boolean",
+      "description": "Whether the patient is currently eligible under this policy"
+    },
+    "policy_status": {
+      "type": "string",
+      "enum": ["ACTIVE", "INACTIVE", "EXPIRED", "TERMINATED", "PENDING"]
+    },
+    "effective_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "termination_date": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "subscriber_relationship": {
+      "type": "string",
+      "enum": ["SELF", "SPOUSE", "CHILD", "OTHER"],
+      "default": "SELF"
+    },
+    "plan_type": {
+      "type": "string",
+      "description": "PPO, HMO, EPO, POS, Medicare, Medicaid"
+    },
+    "payer_response_code": {
+      "type": "string",
+      "description": "Standard EDI 271 / API response code (e.g. 1 = Active, 6 = Inactive)"
+    },
+    "payer_raw_message": {
+      "type": "string",
+      "description": "Human-readable message returned by payer"
+    },
+    "verification_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "next_reverification_date": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

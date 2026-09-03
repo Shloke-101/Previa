@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RecommendedAction",
+  "description": "Canonical schema for prescriptive staff guidance and corrective actions (F11)",
+  "type": "object",
+  "required": [
+    "action_id",
+    "patient_id",
+    "appointment_id",
+    "problem_code",
+    "action_type",
+    "priority",
+    "recommended_step",
+    "status"
+  ],
+  "properties": {
+    "action_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "patient_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "appointment_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "problem_code": {
+      "type": "string",
+      "enum": [
+        "MEMBER_ID_MISMATCH",
+        "INACTIVE_POLICY",
+        "EXPIRED_POLICY",
+        "MISSING_AUTHORIZATION",
+        "OUT_OF_NETWORK",
+        "MISSING_REFERRAL",
+        "NON_COVERED_SERVICE",
+        "DATA_ENTRY_ERROR"
+      ]
+    },
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "UPDATE_EHR_RECORD",
+        "REQUEST_PRIOR_AUTH",
+        "CONTACT_PAYER",
+        "REQUEST_REFERRAL",
+        "COLLECT_COPAY_PREPAYMENT",
+        "OBTAIN_SECONDARY_INSURANCE"
+      ]
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["URGENT", "HIGH", "MEDIUM", "LOW"]
+    },
+    "recommended_step": {
+      "type": "string",
+      "description": "Concrete instruction for registrar (e.g. 'Verify card scan and update MRN record with Member ID AB123456')"
+    },
+    "assigned_role": {
+      "type": "string",
+      "enum": ["REGISTRAR", "FINANCIAL_COUNSELOR", "AUTH_SPECIALIST", "BILLING"],
+      "default": "REGISTRAR"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["OPEN", "IN_PROGRESS", "RESOLVED", "DISMISSED"],
+      "default": "OPEN"
+    },
+    "resolution_note": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resolved_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InsurancePolicyAndCard",
+  "description": "Canonical schema for insurance policy, card OCR extraction, and field validation",
+  "definitions": {
+    "ValidationStatus": {
+      "type": "string",
+      "enum": ["MATCH", "PARTIAL_MATCH", "MISMATCH"]
+    },
+    "FieldSeverity": {
+      "type": "string",
+      "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+    },
+    "PolicyStatus": {
+      "type": "string",
+      "enum": ["ACTIVE", "INACTIVE", "EXPIRED", "TERMINATED", "PENDING"]
+    },
+    "NetworkTier": {
+      "type": "string",
+      "enum": ["IN_NETWORK", "OUT_OF_NETWORK", "TIER_2"]
+    }
+  },
+  "type": "object",
+  "required": [
+    "insurance_policy_id",
+    "patient_id",
+    "payer_name",
+    "payer_id",
+    "member_id",
+    "policy_number",
+    "policy_status"
+  ],
+  "properties": {
+    "insurance_policy_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for the insurance policy"
+    },
+    "patient_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Foreign key to patient"
+    },
+    "payer_name": {
+      "type": "string",
+      "description": "Name of the insurance payer (e.g. BlueCross, Aetna, Medicare)"
+    },
+    "payer_id": {
+      "type": "string",
+      "description": "Electronic Payer ID"
+    },
+    "plan_name": {
+      "type": "string",
+      "description": "Plan specific name (e.g. Gold PPO, HMO Select)"
+    },
+    "member_id": {
+      "type": "string",
+      "description": "Insurance member / subscriber ID"
+    },
+    "policy_number": {
+      "type": "string",
+      "description": "Policy number"
+    },
+    "group_number": {
+      "type": "string",
+      "description": "Employer group number"
+    },
+    "policy_status": {
+      "$ref": "#/definitions/PolicyStatus"
+    },
+    "network_tier": {
+      "$ref": "#/definitions/NetworkTier",
+      "default": "IN_NETWORK"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Policy coverage start date (YYYY-MM-DD)"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Policy coverage expiration date (YYYY-MM-DD)"
+    },
+    "card_ocr_data": {
+      "type": "object",
+      "description": "Extracted OCR metadata from scanned card",
+      "properties": {
+        "extracted_name": { "type": "string" },
+        "extracted_dob": { "type": "string" },
+        "extracted_member_id": { "type": "string" },
+        "extracted_policy_number": { "type": "string" },
+        "extracted_group_number": { "type": "string" },
+        "extracted_payer_name": { "type": "string" },
+        "extracted_expiry_date": { "type": "string" },
+        "ocr_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "card_image_url": { "type": "string" }
+      }
+    },
+    "field_validations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field_name", "status", "severity"],
+        "properties": {
+          "field_name": { "type": "string" },
+          "card_value": { "type": ["string", "null"] },
+          "record_value": { "type": ["string", "null"] },
+          "status": { "$ref": "#/definitions/ValidationStatus" },
+          "severity": { "$ref": "#/definitions/FieldSeverity" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

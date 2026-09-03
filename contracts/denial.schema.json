@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HistoricalDenialAndRootCause",
+  "description": "Canonical schema for historical claim denials, clustering, and root cause analysis (F13, F15)",
+  "type": "object",
+  "required": [
+    "denial_id",
+    "claim_id",
+    "payer_name",
+    "denial_reason_code",
+    "denial_category",
+    "billed_amount",
+    "denied_amount",
+    "service_date"
+  ],
+  "properties": {
+    "denial_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "claim_id": {
+      "type": "string"
+    },
+    "patient_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "payer_name": {
+      "type": "string"
+    },
+    "payer_id": {
+      "type": "string"
+    },
+    "procedure_code": {
+      "type": "string"
+    },
+    "department": {
+      "type": "string"
+    },
+    "denial_reason_code": {
+      "type": "string",
+      "description": "CARC / RARC code (e.g. CO-197: Prior Auth Missing, CO-27: Inactive Coverage, CO-16: Demographic Mismatch)"
+    },
+    "denial_category": {
+      "type": "string",
+      "enum": [
+        "MISSING_AUTHORIZATION",
+        "INACTIVE_COVERAGE",
+        "DATA_MISMATCH",
+        "NON_COVERED_SERVICE",
+        "OUT_OF_NETWORK",
+        "TIMELY_FILING",
+        "OTHER"
+      ]
+    },
+    "root_cause_finding": {
+      "type": "string",
+      "description": "Identified systemic flaw (e.g. 'MRI procedures scheduled without automated auth check trigger')"
+    },
+    "billed_amount": {
+      "type": "number",
+      "minimum": 0
+    },
+    "denied_amount": {
+      "type": "number",
+      "minimum": 0
+    },
+    "service_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "denial_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "preventable_by_previa": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "additionalProperties": false
+}

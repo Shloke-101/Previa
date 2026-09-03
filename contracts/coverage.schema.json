@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CoverageVerification",
+  "description": "Canonical schema for procedure coverage & network tier verification (F04, F06)",
+  "type": "object",
+  "required": [
+    "coverage_id",
+    "patient_id",
+    "insurance_policy_id",
+    "procedure_code",
+    "is_covered",
+    "coverage_percentage",
+    "network_status"
+  ],
+  "properties": {
+    "coverage_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "patient_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "insurance_policy_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "appointment_id": {
+      "type": ["string", "null"],
+      "format": "uuid"
+    },
+    "procedure_code": {
+      "type": "string"
+    },
+    "procedure_description": {
+      "type": "string"
+    },
+    "is_covered": {
+      "type": "boolean",
+      "description": "True if procedure is a covered benefit under the policy"
+    },
+    "coverage_percentage": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Payer payment percentage (e.g. 80 for 80% coverage)"
+    },
+    "coverage_reason": {
+      "type": "string",
+      "description": "Explanation of coverage determination or restriction"
+    },
+    "network_status": {
+      "type": "string",
+      "enum": ["IN_NETWORK", "OUT_OF_NETWORK", "TIER_2"],
+      "default": "IN_NETWORK"
+    },
+    "referral_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "referral_on_file": {
+      "type": "boolean",
+      "default": false
+    },
+    "referral_id": {
+      "type": ["string", "null"]
+    },
+    "limitations": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Specific coverage restrictions (e.g. max 1 MRI per 6 months)"
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

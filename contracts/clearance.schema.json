@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ClearanceEvaluation",
+  "description": "Canonical schema for operational pre-visit financial clearance determinations (F10, F12)",
+  "type": "object",
+  "required": [
+    "clearance_id",
+    "patient_id",
+    "appointment_id",
+    "clearance_status",
+    "risk_score",
+    "risk_level",
+    "is_blocked",
+    "blocking_reasons",
+    "evaluated_at"
+  ],
+  "properties": {
+    "clearance_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "patient_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "appointment_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "clearance_status": {
+      "type": "string",
+      "enum": ["CLEARED", "NEEDS_ACTION", "HIGH_RISK"],
+      "description": "Operational determination: CLEARED (green), NEEDS_ACTION (amber), HIGH_RISK (red)"
+    },
+    "risk_score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": ["LOW", "MEDIUM", "HIGH"]
+    },
+    "is_blocked": {
+      "type": "boolean",
+      "description": "True if unresolved critical issues prevent patient from being cleared"
+    },
+    "blocking_reasons": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of unresolved blockers preventing clearance"
+    },
+    "eligibility_verified": {
+      "type": "boolean"
+    },
+    "coverage_verified": {
+      "type": "boolean"
+    },
+    "authorization_satisfied": {
+      "type": "boolean"
+    },
+    "validation_passed": {
+      "type": "boolean"
+    },
+    "estimated_patient_responsibility": {
+      "type": "number",
+      "minimum": 0
+    },
+    "priority_rank": {
+      "type": "integer",
+      "description": "Staff work queue priority rank (1 = highest urgency)"
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "evaluated_by": {
+      "type": "string",
+      "default": "CLEARANCE_ENGINE_v1"
+    }
+  },
+  "additionalProperties": false
+}

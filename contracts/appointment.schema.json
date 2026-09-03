@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Appointment",
+  "description": "Canonical schema for scheduled patient encounters / appointments",
+  "type": "object",
+  "required": [
+    "appointment_id",
+    "patient_id",
+    "appointment_time",
+    "provider_name",
+    "department",
+    "procedure_code",
+    "procedure_description",
+    "estimated_cost",
+    "status"
+  ],
+  "properties": {
+    "appointment_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for the appointment"
+    },
+    "patient_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the scheduled patient"
+    },
+    "insurance_policy_id": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "description": "Primary insurance policy associated with this visit"
+    },
+    "appointment_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Scheduled date and time of appointment"
+    },
+    "provider_name": {
+      "type": "string",
+      "description": "Attending doctor or clinician name"
+    },
+    "department": {
+      "type": "string",
+      "description": "Hospital department (e.g. Radiology, Cardiology, Orthopedics)"
+    },
+    "facility_name": {
+      "type": "string",
+      "description": "Clinic or facility location"
+    },
+    "procedure_code": {
+      "type": "string",
+      "description": "CPT / HCPCS primary procedure code (e.g. 70553, 99213)"
+    },
+    "procedure_description": {
+      "type": "string",
+      "description": "Human-readable description of procedure (e.g. MRI Brain with & without contrast)"
+    },
+    "estimated_cost": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Gross billed charge estimate for procedure"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["SCHEDULED", "CONFIRMED", "CHECKED_IN", "COMPLETED", "CANCELLED"],
+      "default": "SCHEDULED"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

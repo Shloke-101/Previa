@@ -1,0 +1,130 @@
+{
+  "synthetic_demo_scenarios": [
+    {
+      "scenario_id": "SCENARIO_01_CLEARED",
+      "name": "Standard Cleared Encounter",
+      "patient": {
+        "first_name": "Elena",
+        "last_name": "Rostova",
+        "date_of_birth": "1985-04-12",
+        "gender": "FEMALE",
+        "mrn": "MRN-882910"
+      },
+      "insurance": {
+        "payer_name": "BlueCross BlueShield",
+        "payer_id": "BCBS-IL-001",
+        "member_id": "BC9928172",
+        "policy_number": "POL-449102",
+        "policy_status": "ACTIVE",
+        "network_tier": "IN_NETWORK"
+      },
+      "appointment": {
+        "procedure_code": "99213",
+        "procedure_description": "Office or other outpatient visit, 20-29 mins",
+        "department": "Internal Medicine",
+        "estimated_cost": 220.00
+      },
+      "expected_outcome": {
+        "clearance_status": "CLEARED",
+        "risk_score": 5,
+        "risk_level": "LOW",
+        "auth_required": false
+      }
+    },
+    {
+      "scenario_id": "SCENARIO_02_AUTH_REQUIRED",
+      "name": "Missing Prior Authorization on MRI",
+      "patient": {
+        "first_name": "Marcus",
+        "last_name": "Vance",
+        "date_of_birth": "1972-11-03",
+        "gender": "MALE",
+        "mrn": "MRN-104928"
+      },
+      "insurance": {
+        "payer_name": "Aetna Health",
+        "payer_id": "AETNA-001",
+        "member_id": "AET883719",
+        "policy_number": "POL-992817",
+        "policy_status": "ACTIVE",
+        "network_tier": "IN_NETWORK"
+      },
+      "appointment": {
+        "procedure_code": "70553",
+        "procedure_description": "MRI Brain with and without contrast",
+        "department": "Radiology",
+        "estimated_cost": 1850.00
+      },
+      "expected_outcome": {
+        "clearance_status": "NEEDS_ACTION",
+        "risk_score": 72,
+        "risk_level": "HIGH",
+        "auth_required": true,
+        "auth_status": "REQUIRED",
+        "recommended_action": "Initiate Prior Authorization submission with Aetna before visit"
+      }
+    },
+    {
+      "scenario_id": "SCENARIO_03_DATA_MISMATCH",
+      "name": "OCR Member ID Mismatch Against Record",
+      "patient": {
+        "first_name": "Rahul",
+        "last_name": "Sharma",
+        "date_of_birth": "2005-05-12",
+        "gender": "MALE",
+        "mrn": "MRN-773918"
+      },
+      "insurance": {
+        "payer_name": "UnitedHealthcare",
+        "payer_id": "UHC-001",
+        "member_id": "AB123465",
+        "policy_number": "POL-554219",
+        "policy_status": "ACTIVE",
+        "network_tier": "IN_NETWORK"
+      },
+      "ocr_card_scanned": {
+        "member_id": "AB123456",
+        "patient_name": "Rahul Sharma",
+        "date_of_birth": "2005-05-12"
+      },
+      "expected_outcome": {
+        "clearance_status": "HIGH_RISK",
+        "risk_score": 85,
+        "risk_level": "HIGH",
+        "validation_status": "MISMATCH",
+        "recommended_action": "Verify scanned card image and correct member ID in hospital EHR"
+      }
+    },
+    {
+      "scenario_id": "SCENARIO_04_EXPIRED_POLICY",
+      "name": "Expired Insurance Policy",
+      "patient": {
+        "first_name": "Sarah",
+        "last_name": "Jenkins",
+        "date_of_birth": "1990-08-22",
+        "gender": "FEMALE",
+        "mrn": "MRN-338291"
+      },
+      "insurance": {
+        "payer_name": "Cigna",
+        "payer_id": "CIGNA-001",
+        "member_id": "CIG-0029182",
+        "policy_number": "POL-119283",
+        "policy_status": "EXPIRED",
+        "network_tier": "IN_NETWORK"
+      },
+      "appointment": {
+        "procedure_code": "99214",
+        "procedure_description": "Office or outpatient visit, 30-39 mins",
+        "department": "Cardiology",
+        "estimated_cost": 310.00
+      },
+      "expected_outcome": {
+        "clearance_status": "HIGH_RISK",
+        "risk_score": 95,
+        "risk_level": "HIGH",
+        "recommended_action": "Contact patient to obtain active insurance or collect self-pay estimate"
+      }
+    }
+  ]
+}

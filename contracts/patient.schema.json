@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Patient",
+  "description": "Canonical schema for patient demographics and hospital EHR identity in Previa PVFC",
+  "type": "object",
+  "required": [
+    "patient_id",
+    "first_name",
+    "last_name",
+    "date_of_birth",
+    "gender",
+    "mrn"
+  ],
+  "properties": {
+    "patient_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for the patient"
+    },
+    "first_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient legal first name"
+    },
+    "last_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient legal last name"
+    },
+    "date_of_birth": {
+      "type": "string",
+      "format": "date",
+      "description": "Patient date of birth in YYYY-MM-DD format"
+    },
+    "gender": {
+      "type": "string",
+      "enum": ["MALE", "FEMALE", "OTHER", "UNKNOWN"],
+      "description": "Administrative gender"
+    },
+    "mrn": {
+      "type": "string",
+      "description": "Hospital Medical Record Number"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Contact email address"
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "street": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "postal_code": { "type": "string" },
+        "country": { "type": "string", "default": "USA" }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

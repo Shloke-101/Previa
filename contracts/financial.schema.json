@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FinancialEstimate",
+  "description": "Canonical schema for pre-encounter patient financial responsibility calculation (F07)",
+  "type": "object",
+  "required": [
+    "estimate_id",
+    "patient_id",
+    "appointment_id",
+    "procedure_cost",
+    "deductible_remaining",
+    "copay_amount",
+    "coinsurance_percentage",
+    "estimated_patient_responsibility",
+    "estimated_insurance_responsibility"
+  ],
+  "properties": {
+    "estimate_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "patient_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "appointment_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "procedure_code": {
+      "type": "string"
+    },
+    "procedure_cost": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Total allowable billed cost"
+    },
+    "coverage_percentage": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "deductible_total": {
+      "type": "number",
+      "minimum": 0
+    },
+    "deductible_remaining": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Remaining deductible amount patient must satisfy before coinsurance kicks in"
+    },
+    "copay_amount": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Fixed copay for the encounter"
+    },
+    "coinsurance_percentage": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Patient coinsurance percentage (e.g. 20 for 20%)"
+    },
+    "out_of_pocket_max": {
+      "type": "number",
+      "minimum": 0
+    },
+    "out_of_pocket_remaining": {
+      "type": "number",
+      "minimum": 0
+    },
+    "estimated_patient_responsibility": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Calculated patient out-of-pocket obligation before visit"
+    },
+    "estimated_insurance_responsibility": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Calculated insurance expected payment"
+    },
+    "calculation_breakdown": {
+      "type": "object",
+      "properties": {
+        "applied_deductible": { "type": "number" },
+        "applied_copay": { "type": "number" },
+        "applied_coinsurance": { "type": "number" }
+      }
+    },
+    "calculated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

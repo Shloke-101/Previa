@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PreventiveWorkflow",
+  "description": "Canonical schema for proactive workflow automation rules, tasks, and impact tracking (F14, F15)",
+  "type": "object",
+  "required": [
+    "workflow_id",
+    "rule_name",
+    "trigger_event",
+    "condition",
+    "action_payload",
+    "is_active"
+  ],
+  "properties": {
+    "workflow_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "rule_name": {
+      "type": "string",
+      "description": "Descriptive rule name (e.g. 'Preventive MRI Prior Auth Auto-Trigger')"
+    },
+    "trigger_event": {
+      "type": "string",
+      "enum": [
+        "APPOINTMENT_CREATED",
+        "CARD_UPLOADED",
+        "ELIGIBILITY_FAILED",
+        "AUTH_REQUIRED",
+        "EXPIRING_POLICY"
+      ]
+    },
+    "condition": {
+      "type": "object",
+      "description": "Rule criteria (e.g. procedure_code in ['70551', '70553'] AND auth_status == 'REQUIRED')",
+      "properties": {
+        "procedure_codes": { "type": "array", "items": { "type": "string" } },
+        "payers": { "type": "array", "items": { "type": "string" } },
+        "departments": { "type": "array", "items": { "type": "string" } },
+        "risk_threshold": { "type": "integer" }
+      }
+    },
+    "action_payload": {
+      "type": "object",
+      "required": ["task_type", "task_description"],
+      "properties": {
+        "task_type": {
+          "type": "string",
+          "enum": ["CREATE_AUTH_TASK", "ALERT_REGISTRAR", "TRIGGER_REVERIFICATION", "NOTIFY_FINANCIAL_COUNSELOR"]
+        },
+        "task_description": { "type": "string" },
+        "lead_time_days": { "type": "integer", "default": 5 }
+      }
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "triggered_count": { "type": "integer", "default": 0 },
+        "prevented_denials_count": { "type": "integer", "default": 0 },
+        "estimated_savings_dollars": { "type": "number", "default": 0 }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

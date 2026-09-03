@@ -1,0 +1,722 @@
+{
+  "project": {
+    "name": "Pre-Visit Financial Clearance System",
+    "short_name": "PVFC",
+    "problem_statement": "Build an intelligent healthcare pre-visit financial clearance platform that automates patient insurance eligibility verification, reduces data-entry errors, confirms coverage before appointments, prevents eligibility-related claim denials, reduces administrative workload, and identifies systemic denial root causes so upstream workflows can be improved.",
+    "primary_goal": "Determine whether a patient is financially and administratively ready for a specific healthcare service before the patient visit, identify what could go wrong, recommend corrective actions, and prevent recurring problems at the workflow level.",
+    "core_value_proposition": "Do not wait for an eligibility problem to become a claim denial. Detect, resolve, and prevent the problem before the patient visit.",
+    "target_users": [
+      "Front-desk staff",
+      "Insurance verification staff",
+      "RCM/billing staff",
+      "Hospital administrators"
+    ],
+    "data_policy": "Use only synthetic/mock patient, insurance, appointment, coverage, and claim data for the hackathon. Do not use real patient data."
+  },
+  "problem_to_solution_mapping": {
+    "manual_eligibility_verification": {
+      "problem": "Staff manually verify insurance eligibility.",
+      "solution_features": [
+        "Automated Insurance Eligibility Verification",
+        "Real-Time Coverage Verification",
+        "Automatic Re-Verification"
+      ]
+    },
+    "data_entry_errors": {
+      "problem": "Manual entry of member IDs, policy numbers, names, DOBs, and other insurance information can introduce errors.",
+      "solution_features": [
+        "Insurance Card OCR & Data Extraction",
+        "Intelligent Data Validation"
+      ]
+    },
+    "delayed_coverage_confirmation": {
+      "problem": "Coverage issues may be discovered too late, sometimes close to or during the patient's appointment.",
+      "solution_features": [
+        "Real-Time Coverage Verification",
+        "Pre-Visit Verification",
+        "Automatic Re-Verification",
+        "Automated Alerts"
+      ]
+    },
+    "eligibility_related_claim_denials": {
+      "problem": "Claims can be denied because of inactive insurance, incorrect information, missing authorization, coverage restrictions, or network issues.",
+      "solution_features": [
+        "Coverage Verification",
+        "Prior Authorization Detection",
+        "Referral & Network Verification",
+        "Eligibility & Claim Risk Score",
+        "Explainable Risk Analysis",
+        "Preventive Workflow Automation"
+      ]
+    },
+    "administrative_burden": {
+      "problem": "Staff must manually review many patients and decide which cases require immediate attention.",
+      "solution_features": [
+        "Pre-Visit Priority Dashboard",
+        "Priority Queue",
+        "Automated Alerts & Notifications",
+        "Recommended Action Engine",
+        "Automated Clearance Status"
+      ]
+    },
+    "recurring_systemic_denials": {
+      "problem": "Fixing hundreds of individually denied claims does not address the underlying workflow problem.",
+      "solution_features": [
+        "Root Cause Analysis & Denial Pattern Detection",
+        "Preventive Workflow Automation",
+        "Continuous Process Improvement Dashboard"
+      ]
+    }
+  },
+  "features": [
+    {
+      "id": "F01",
+      "name": "Automated Insurance Eligibility Verification",
+      "priority": "MUST_HAVE",
+      "description": "Automatically verify whether a patient's insurance policy is active and eligible for the upcoming encounter.",
+      "inputs": [
+        "patient_id",
+        "insurance_policy_id",
+        "appointment_id"
+      ],
+      "outputs": [
+        "eligibility_status",
+        "policy_status",
+        "verification_timestamp"
+      ],
+      "solves": [
+        "manual eligibility verification",
+        "administrative workload"
+      ]
+    },
+    {
+      "id": "F02",
+      "name": "Insurance Card OCR & Data Extraction",
+      "priority": "MUST_HAVE",
+      "description": "Extract insurance and patient information from an uploaded insurance card.",
+      "fields": [
+        "patient_name",
+        "date_of_birth",
+        "member_id",
+        "policy_number",
+        "group_number",
+        "insurance_provider",
+        "policy_expiry_date"
+      ],
+      "outputs": [
+        "structured_extracted_data",
+        "ocr_confidence"
+      ],
+      "solves": [
+        "manual data entry",
+        "data-entry errors"
+      ]
+    },
+    {
+      "id": "F03",
+      "name": "Intelligent Data Validation",
+      "priority": "MUST_HAVE",
+      "description": "Compare OCR-extracted insurance information with the hospital patient record and identify field-level inconsistencies before verification.",
+      "validation_statuses": [
+        "MATCH",
+        "PARTIAL_MATCH",
+        "MISMATCH"
+      ],
+      "field_severity": {
+        "member_id": "CRITICAL",
+        "policy_number": "CRITICAL",
+        "date_of_birth": "CRITICAL",
+        "insurance_provider": "HIGH",
+        "policy_expiry_date": "HIGH",
+        "patient_name": "MEDIUM",
+        "group_number": "MEDIUM"
+      },
+      "example": {
+        "insurance_card": {
+          "name": "Rahul Sharma",
+          "dob": "12/05/2005",
+          "member_id": "AB123456"
+        },
+        "hospital_record": {
+          "name": "Rahul S.",
+          "dob": "12/05/2005",
+          "member_id": "AB123465"
+        },
+        "result": {
+          "name": "PARTIAL_MATCH",
+          "dob": "MATCH",
+          "member_id": "MISMATCH"
+        }
+      },
+      "solves": [
+        "data-entry errors",
+        "incorrect patient/insurance information"
+      ]
+    },
+    {
+      "id": "F04",
+      "name": "Real-Time Coverage Verification",
+      "priority": "MUST_HAVE",
+      "description": "Determine whether the specific planned procedure or service is covered by the patient's insurance plan.",
+      "outputs": [
+        "coverage_status",
+        "coverage_percentage",
+        "coverage_reason"
+      ],
+      "solves": [
+        "delayed coverage confirmation",
+        "incorrect assumption that active insurance means every service is covered"
+      ]
+    },
+    {
+      "id": "F05",
+      "name": "Prior Authorization Detection",
+      "priority": "MUST_HAVE",
+      "description": "Determine whether the planned procedure requires prior authorization and whether authorization is already present.",
+      "outputs": [
+        "authorization_required",
+        "authorization_status"
+      ],
+      "solves": [
+        "authorization-related claim denials",
+        "pre-visit delays"
+      ]
+    },
+    {
+      "id": "F06",
+      "name": "Referral & Network Verification",
+      "priority": "HIGH_VALUE",
+      "description": "Check referral requirements and whether the provider/hospital is in-network for the patient's plan.",
+      "outputs": [
+        "referral_required",
+        "referral_status",
+        "network_status"
+      ],
+      "solves": [
+        "coverage problems",
+        "eligibility-related claim issues"
+      ]
+    },
+    {
+      "id": "F07",
+      "name": "Patient Financial Responsibility Estimator",
+      "priority": "MUST_HAVE",
+      "description": "Estimate patient out-of-pocket responsibility using procedure cost, coverage, deductible, copay, and coinsurance information.",
+      "inputs": [
+        "procedure_cost",
+        "coverage_percentage",
+        "deductible_remaining",
+        "copay",
+        "coinsurance"
+      ],
+      "outputs": [
+        "estimated_insurance_responsibility",
+        "estimated_patient_responsibility"
+      ],
+      "solves": [
+        "financial uncertainty",
+        "pre-visit financial clearance"
+      ]
+    },
+    {
+      "id": "F08",
+      "name": "Eligibility & Claim Risk Score",
+      "priority": "MUST_HAVE",
+      "description": "Calculate a 0-100 risk score representing the likelihood of an eligibility-related problem or claim denial.",
+      "risk_range": {
+        "LOW": "0-39",
+        "MEDIUM": "40-69",
+        "HIGH": "70-100"
+      },
+      "potential_factors": [
+        "inactive_insurance",
+        "expired_policy",
+        "member_id_mismatch",
+        "policy_number_mismatch",
+        "missing_authorization",
+        "coverage_restriction",
+        "out_of_network",
+        "policy_expiring_soon"
+      ],
+      "implementation": "Start with an explainable deterministic weighted-rule engine. ML can be added later if time and synthetic historical data permit.",
+      "solves": [
+        "eligibility-related claim denials",
+        "prioritization"
+      ]
+    },
+    {
+      "id": "F09",
+      "name": "Explainable Risk Analysis",
+      "priority": "MUST_HAVE",
+      "description": "Show exactly why a patient received a particular risk score and how individual factors contribute to it.",
+      "example": {
+        "risk_score": 78,
+        "risk_level": "HIGH",
+        "factors": [
+          {
+            "reason": "Prior authorization missing",
+            "impact": 30
+          },
+          {
+            "reason": "Member ID mismatch",
+            "impact": 20
+          },
+          {
+            "reason": "Policy expiring soon",
+            "impact": 15
+          },
+          {
+            "reason": "Out-of-network",
+            "impact": 13
+          }
+        ]
+      },
+      "solves": [
+        "unexplained risk decisions",
+        "staff uncertainty"
+      ]
+    },
+    {
+      "id": "F10",
+      "name": "Automated Clearance Status",
+      "priority": "MUST_HAVE",
+      "description": "Combine eligibility, validation, coverage, authorization, network, referral, financial, and risk results into a single operational status.",
+      "statuses": [
+        "CLEARED",
+        "NEEDS_ACTION",
+        "HIGH_RISK"
+      ],
+      "decision_rule": "A patient should not be marked CLEARED when a critical unresolved eligibility, coverage, or authorization issue exists.",
+      "solves": [
+        "complex manual interpretation",
+        "slow decision-making"
+      ]
+    },
+    {
+      "id": "F11",
+      "name": "Recommended Action Engine",
+      "priority": "MUST_HAVE",
+      "description": "Translate detected problems into concrete next actions for staff.",
+      "examples": [
+        {
+          "problem": "Member ID mismatch",
+          "action": "Verify insurance card and update the hospital patient record."
+        },
+        {
+          "problem": "Prior authorization required",
+          "action": "Start authorization workflow before the appointment."
+        },
+        {
+          "problem": "Inactive insurance",
+          "action": "Contact payer or obtain updated insurance information."
+        }
+      ],
+      "solves": [
+        "administrative burden",
+        "unclear resolution steps"
+      ]
+    },
+    {
+      "id": "F12",
+      "name": "Pre-Visit Priority Dashboard & Alerts",
+      "priority": "MUST_HAVE",
+      "description": "Centralize upcoming patients, clearance statuses, risk, urgency, and unresolved issues, and alert staff about high-priority cases.",
+      "dashboard_metrics": [
+        "total_upcoming_patients",
+        "cleared",
+        "needs_action",
+        "high_risk",
+        "pending_verification",
+        "potential_financial_exposure"
+      ],
+      "priority_logic": "Rank patients using risk score, appointment proximity, and financial impact.",
+      "alerts": [
+        "inactive_insurance",
+        "expiring_policy",
+        "missing_authorization",
+        "coverage_problem",
+        "data_mismatch",
+        "high_risk",
+        "appointment_approaching_with_unresolved_issue"
+      ],
+      "solves": [
+        "administrative workload",
+        "late issue discovery"
+      ]
+    },
+    {
+      "id": "F13",
+      "name": "Root Cause Analysis & Denial Pattern Detection",
+      "priority": "HIGH_VALUE",
+      "description": "Analyze historical claims and denial data, group denials by common causes, identify recurring patterns, and surface systemic workflow problems.",
+      "example": {
+        "total_denied_claims": 300,
+        "common_root_cause": "MISSING_AUTHORIZATION",
+        "finding": "A large number of authorization denials indicates an upstream authorization workflow problem rather than 300 unrelated claim problems."
+      },
+      "analysis_levels": [
+        "overall denial reason",
+        "procedure",
+        "insurance provider",
+        "department",
+        "provider",
+        "time period"
+      ],
+      "solves": [
+        "recurring systemic denials",
+        "reactive claim-by-claim correction"
+      ]
+    },
+    {
+      "id": "F14",
+      "name": "Preventive Workflow Automation",
+      "priority": "HIGH_VALUE",
+      "description": "Use recurring denial patterns and coverage rules to trigger preventive actions upstream during appointment creation or pre-visit clearance.",
+      "example_workflow": {
+        "trigger": "New MRI appointment",
+        "steps": [
+          "Check whether MRI requires authorization",
+          "If no, continue normal clearance",
+          "If yes, check whether authorization is present",
+          "If authorization is present, continue",
+          "If authorization is missing, automatically create authorization task and alert staff"
+        ]
+      },
+      "goal": "Prevent future claims from failing for the same known reason.",
+      "solves": [
+        "future claim denials",
+        "workflow inefficiency",
+        "repeated manual correction"
+      ]
+    },
+    {
+      "id": "F15",
+      "name": "Continuous Process Improvement Dashboard",
+      "priority": "HIGH_VALUE",
+      "description": "Measure whether preventive workflow interventions reduce recurring denial causes over time.",
+      "metrics": [
+        "denial_rate_before",
+        "denial_rate_after",
+        "authorization_denials",
+        "data_mismatch_denials",
+        "inactive_insurance_denials",
+        "prevented_high_risk_encounters"
+      ],
+      "example": {
+        "before": 300,
+        "after": 42,
+        "improvement_percent": 86
+      },
+      "solves": [
+        "lack of feedback loop",
+        "inability to measure workflow improvement"
+      ]
+    }
+  ],
+  "core_workflow": [
+    "Appointment Created",
+    "Patient and Insurance Information Loaded",
+    "Insurance Card Uploaded if Required",
+    "OCR Extracts Insurance Data",
+    "Intelligent Data Validation",
+    "Eligibility Verification",
+    "Procedure Coverage Verification",
+    "Prior Authorization Check",
+    "Referral and Network Check",
+    "Financial Responsibility Estimation",
+    "Eligibility/Claim Risk Score",
+    "Explain Risk Factors",
+    "Generate Recommended Actions",
+    "Assign Clearance Status",
+    "Add Patient to Priority Queue if Action Required",
+    "Alert Staff",
+    "Resolve Issues",
+    "Re-Verify",
+    "Mark Patient CLEARED"
+  ],
+  "systemic_prevention_workflow": {
+    "purpose": "Move from reactive denial correction to proactive prevention.",
+    "flow": [
+      "Historical claims analyzed",
+      "Denial patterns grouped",
+      "Root cause identified",
+      "Preventive workflow rule created",
+      "New appointment triggers rule",
+      "Potential issue detected before visit",
+      "Authorization/verification task automatically initiated",
+      "Staff resolves issue",
+      "Patient is cleared",
+      "Future denial probability is reduced",
+      "Dashboard measures impact"
+    ]
+  },
+  "example_scenarios": [
+    {
+      "name": "Cleared Patient",
+      "status": "CLEARED",
+      "scenario": "Insurance active, procedure covered, authorization not required, data matches, in-network.",
+      "risk_score": 8
+    },
+    {
+      "name": "Authorization Required",
+      "status": "NEEDS_ACTION",
+      "scenario": "Insurance active and procedure covered, but prior authorization is required and missing.",
+      "risk_score": 72,
+      "recommended_action": "Start authorization workflow before appointment."
+    },
+    {
+      "name": "Data Mismatch",
+      "status": "HIGH_RISK",
+      "scenario": "Insurance card member ID differs from hospital record member ID.",
+      "risk_score": 85,
+      "recommended_action": "Verify insurance card and correct patient/insurance record."
+    },
+    {
+      "name": "Expired Insurance",
+      "status": "HIGH_RISK",
+      "scenario": "Policy is expired for the appointment date.",
+      "risk_score": 95,
+      "recommended_action": "Verify updated insurance or alternative coverage."
+    },
+    {
+      "name": "Systemic Authorization Problem",
+      "status": "PROCESS_IMPROVEMENT",
+      "scenario": "300 historical claims were denied because authorization was missing.",
+      "root_cause": "Authorization workflow is not being triggered when certain appointments are created.",
+      "preventive_action": "Automatically check authorization requirements and start an authorization task when a qualifying appointment is created."
+    }
+  ],
+  "recommended_tech_stack": {
+    "frontend": [
+      "React",
+      "Next.js",
+      "Tailwind CSS",
+      "Recharts"
+    ],
+    "backend": [
+      "Python",
+      "FastAPI",
+      "SQLAlchemy"
+    ],
+    "database": [
+      "PostgreSQL"
+    ],
+    "ocr": [
+      "Tesseract OCR",
+      "EasyOCR or PaddleOCR",
+      "OpenCV"
+    ],
+    "analytics_ml": [
+      "Python",
+      "Pandas",
+      "Scikit-learn",
+      "XGBoost optional"
+    ],
+    "ai": "LLM API for explanation, summarization, and natural-language querying; deterministic rules remain authoritative for eligibility and coverage decisions.",
+    "api": [
+      "REST",
+      "OpenAPI/Swagger"
+    ],
+    "deployment": [
+      "Docker",
+      "Docker Compose"
+    ],
+    "version_control": [
+      "Git",
+      "GitHub"
+    ]
+  },
+  "architecture": {
+    "frontend": "React/Next.js web application",
+    "api": "FastAPI REST layer",
+    "services": [
+      "Patient Service",
+      "Insurance Service",
+      "Eligibility Service",
+      "Coverage Service",
+      "Authorization Service",
+      "Financial Calculation Service",
+      "Clearance Engine",
+      "Risk Engine",
+      "Recommendation Engine",
+      "Root Cause Analysis Service",
+      "Workflow Automation Service",
+      "Notification Service"
+    ],
+    "storage": "PostgreSQL",
+    "external_integration": "Mock payer APIs for hackathon demonstration",
+    "principle": "Keep eligibility, coverage, risk, financial calculation, OCR, and workflow automation modular."
+  },
+  "suggested_api_contracts": {
+    "patients": [
+      "GET /api/patients",
+      "GET /api/patients/{patient_id}",
+      "POST /api/patients"
+    ],
+    "appointments": [
+      "GET /api/appointments",
+      "GET /api/appointments/{appointment_id}",
+      "POST /api/appointments"
+    ],
+    "ocr": [
+      "POST /api/ocr/insurance-card"
+    ],
+    "validation": [
+      "POST /api/validation/insurance"
+    ],
+    "eligibility": [
+      "POST /api/eligibility/verify"
+    ],
+    "coverage": [
+      "POST /api/coverage/check"
+    ],
+    "financial": [
+      "POST /api/financial/estimate"
+    ],
+    "risk": [
+      "POST /api/risk/evaluate"
+    ],
+    "clearance": [
+      "POST /api/clearance/evaluate",
+      "GET /api/clearance/{patient_id}"
+    ],
+    "dashboard": [
+      "GET /api/dashboard/summary",
+      "GET /api/dashboard/priority",
+      "GET /api/dashboard/alerts"
+    ],
+    "root_cause": [
+      "GET /api/analytics/denials",
+      "GET /api/analytics/root-causes"
+    ],
+    "workflow": [
+      "POST /api/workflows/authorization",
+      "GET /api/workflows/pending"
+    ]
+  },
+  "clearance_logic": {
+    "CLEARED": "No unresolved critical eligibility, coverage, authorization, validation, or network issue.",
+    "NEEDS_ACTION": "Patient is potentially eligible but one or more resolvable issues require staff action.",
+    "HIGH_RISK": "A critical issue such as inactive/expired insurance, major data mismatch, non-covered service, or severe unresolved eligibility problem exists."
+  },
+  "risk_scoring_guideline": {
+    "note": "Weights are illustrative for the hackathon and should be configurable.",
+    "factors": {
+      "inactive_insurance": 40,
+      "expired_policy": 40,
+      "missing_authorization": 30,
+      "critical_member_id_mismatch": 25,
+      "policy_number_mismatch": 25,
+      "dob_mismatch": 25,
+      "out_of_network": 15,
+      "policy_expiring_soon": 10,
+      "minor_name_mismatch": 5
+    }
+  },
+  "team_structure": {
+    "person_1": {
+      "role": "Backend & Database",
+      "responsibilities": [
+        "FastAPI",
+        "PostgreSQL",
+        "SQLAlchemy",
+        "Eligibility APIs",
+        "Coverage rules",
+        "Authorization logic",
+        "Financial calculation",
+        "Clearance engine",
+        "Dashboard APIs"
+      ]
+    },
+    "person_2": {
+      "role": "Frontend",
+      "responsibilities": [
+        "React/Next.js",
+        "Tailwind CSS",
+        "Dashboard",
+        "Patient pages",
+        "OCR upload UI",
+        "Verification UI",
+        "Risk visualization",
+        "Clearance status",
+        "Priority queue",
+        "Alerts"
+      ]
+    },
+    "person_3": {
+      "role": "AI/Data & Automation",
+      "responsibilities": [
+        "Synthetic data",
+        "OCR pipeline",
+        "Data validation",
+        "Risk scoring",
+        "Explainable risk analysis",
+        "Root cause analysis",
+        "Preventive workflow rules",
+        "Test scenarios"
+      ]
+    }
+  },
+  "mvp_priority": {
+    "must_have": [
+      "F01",
+      "F02",
+      "F03",
+      "F04",
+      "F05",
+      "F07",
+      "F08",
+      "F09",
+      "F10",
+      "F11",
+      "F12"
+    ],
+    "high_value": [
+      "F06",
+      "F13",
+      "F14",
+      "F15"
+    ]
+  },
+  "demo_story": {
+    "primary_message": "We do not wait for eligibility problems to become claim denials; we identify and resolve them before the patient visit and learn from recurring denial patterns to prevent them in the future.",
+    "patient_demo": [
+      "Create/select patient appointment",
+      "Upload insurance card",
+      "Extract insurance details with OCR",
+      "Compare OCR data with hospital record",
+      "Show a detected mismatch or successful match",
+      "Verify eligibility",
+      "Check procedure coverage",
+      "Detect prior authorization requirement",
+      "Estimate patient financial responsibility",
+      "Generate risk score",
+      "Explain risk factors",
+      "Generate recommended action",
+      "Show NEEDS_ACTION or HIGH_RISK status",
+      "Resolve the issue",
+      "Re-verify",
+      "Show CLEARED status"
+    ],
+    "systemic_demo": [
+      "Open historical denial analytics",
+      "Show 300 authorization-related denials",
+      "Group them into a common root cause",
+      "Identify missing authorization workflow as the upstream problem",
+      "Create/activate preventive MRI authorization workflow",
+      "Create a new MRI appointment",
+      "Automatically detect authorization requirement",
+      "Automatically create authorization task and alert",
+      "Show how the future denial is prevented"
+    ]
+  },
+  "non_goals": [
+    "Do not use real patient data.",
+    "Do not make real medical diagnoses.",
+    "Do not make real insurance adjudication decisions.",
+    "Do not claim to provide guaranteed reimbursement amounts.",
+    "Do not integrate with real payer systems for the hackathon unless explicitly available and authorized.",
+    "Do not let an LLM override deterministic eligibility, coverage, or authorization rules.",
+    "Do not overbuild unrelated hospital-management functionality."
+  ]
+}
