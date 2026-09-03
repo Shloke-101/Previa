@@ -1,0 +1,61 @@
+:root {
+  /* Color Palette - Deep Medical Glass */
+  --bg-primary: #0a0f1d;
+  --bg-secondary: #0f172a;
+  --bg-surface: rgba(15, 23, 42, 0.65);
+  --bg-surface-elevated: rgba(30, 41, 59, 0.6);
+  --bg-surface-hover: rgba(51, 65, 85, 0.5);
+
+  /* Glassmorphism Accents */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg-subtle: rgba(255, 255, 255, 0.02);
+  --glass-bg-hover: rgba(255, 255, 255, 0.09);
+  --glass-bg-active: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-border-light: rgba(255, 255, 255, 0.2);
+  --glass-border-glow: rgba(99, 102, 241, 0.4);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --glass-shadow-lg: 0 20px 48px 0 rgba(0, 0, 0, 0.5);
+  --glass-blur: blur(16px);
+  --glass-blur-lg: blur(24px);
+
+  /* Neon Brand Accents */
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --primary-glow: rgba(99, 102, 241, 0.3);
+  --cyan: #06b6d4;
+  --cyan-glow: rgba(6, 182, 212, 0.3);
+  
+  /* Status Colors */
+  --status-cleared: #10b981;
+  --status-cleared-bg: rgba(16, 185, 129, 0.15);
+  --status-cleared-border: rgba(16, 185, 129, 0.35);
+  --status-cleared-glow: 0 0 20px rgba(16, 185, 129, 0.3);
+
+  --status-action: #f59e0b;
+  --status-action-bg: rgba(245, 158, 11, 0.15);
+  --status-action-border: rgba(245, 158, 11, 0.35);
+  --status-action-glow: 0 0 20px rgba(245, 158, 11, 0.3);
+
+  --status-risk: #f43f5e;
+  --status-risk-bg: rgba(244, 63, 94, 0.15);
+  --status-risk-border: rgba(244, 63, 94, 0.35);
+  --status-risk-glow: 0 0 20px rgba(244, 63, 94, 0.3);
+
+  /* Typography Colors */
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --text-accent: #38bdf8;
+
+  /* Sizing & Radius */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
