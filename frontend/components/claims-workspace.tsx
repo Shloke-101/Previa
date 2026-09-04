@@ -265,48 +265,51 @@ export default function ClaimsWorkspace() {
     timezone: '(UTC+05:30) India Standard Time (IST)'
   })
 
-  // Account-Based Claims State (LocalStorage synced)
-  const [claimsByAccount, setClaimsByAccount] = useState<Record<string, Claim[]>>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('previa_claims_by_account')
-        if (saved) return JSON.parse(saved)
-      } catch {}
-    }
-    return INITIAL_CLAIMS_BY_ACCOUNT
+  // Account-Based Claims State (LocalStorage synced safely on client mount)
+  const [claimsByAccount, setClaimsByAccount] = useState<Record<string, Claim[]>>(INITIAL_CLAIMS_BY_ACCOUNT)
+  const [analysisHistoryByAccount, setAnalysisHistoryByAccount] = useState<Record<string, Claim[]>>({
+    'acc-apollo': [INITIAL_CLAIMS_BY_ACCOUNT['acc-apollo'][1]],
+    'acc-max': [INITIAL_CLAIMS_BY_ACCOUNT['acc-max'][1]],
+    'acc-fortis': [INITIAL_CLAIMS_BY_ACCOUNT['acc-fortis'][1]]
   })
+  const [isStorageLoaded, setIsStorageLoaded] = useState(false)
 
-  // Account-Based Analysis History (LocalStorage synced)
-  const [analysisHistoryByAccount, setAnalysisHistoryByAccount] = useState<Record<string, Claim[]>>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('previa_analysis_history')
-        if (saved) return JSON.parse(saved)
-      } catch {}
-    }
-    return {
-      'acc-apollo': [INITIAL_CLAIMS_BY_ACCOUNT['acc-apollo'][1]],
-      'acc-max': [INITIAL_CLAIMS_BY_ACCOUNT['acc-max'][1]],
-      'acc-fortis': [INITIAL_CLAIMS_BY_ACCOUNT['acc-fortis'][1]]
-    }
-  })
-
-  // Save to localStorage
+  // Load from localStorage after mount to eliminate hydration mismatch
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      try {
+        const savedClaims = localStorage.getItem('previa_claims_by_account')
+        if (savedClaims) {
+          setClaimsByAccount(JSON.parse(savedClaims))
+        }
+        const savedHistory = localStorage.getItem('previa_analysis_history')
+        if (savedHistory) {
+          setAnalysisHistoryByAccount(JSON.parse(savedHistory))
+        }
+      } catch (e) {
+        console.error('Failed to load local storage:', e)
+      } finally {
+        setIsStorageLoaded(true)
+      }
+    }
+  }, [])
+
+  // Save to localStorage only after initial load has finished
+  useEffect(() => {
+    if (isStorageLoaded && typeof window !== 'undefined') {
       try {
         localStorage.setItem('previa_claims_by_account', JSON.stringify(claimsByAccount))
       } catch {}
     }
-  }, [claimsByAccount])
+  }, [claimsByAccount, isStorageLoaded])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (isStorageLoaded && typeof window !== 'undefined') {
       try {
         localStorage.setItem('previa_analysis_history', JSON.stringify(analysisHistoryByAccount))
       } catch {}
     }
-  }, [analysisHistoryByAccount])
+  }, [analysisHistoryByAccount, isStorageLoaded])
 
   // Active claims for current account
   const currentClaims = useMemo(() => {
