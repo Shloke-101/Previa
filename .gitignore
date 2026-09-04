@@ -72,3 +72,6 @@ postgres_data/
 tmp/
 temp/
 scratch/
+~$*
+*.db
+

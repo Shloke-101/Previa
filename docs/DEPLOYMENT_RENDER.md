@@ -36,14 +36,16 @@ The stack defined in [`render.yaml`](file:///render.yaml):
 
 ## Service Configurations
 
-### 1. Frontend Static Site (`previa-frontend`)
-- **Type**: `static_site` (Static Site)
+### 1. Frontend Web Service (`previa-frontend`)
+- **Type**: `web` (Web Service)
+- **Runtime**: `node` (Node.js 20+)
 - **Root Directory**: `frontend`
-- **Build Command**: `npm install && npm run build:vite`
-- **Publish Directory**: `dist`
-- **SPA Rewrites**: `/*` &rarr; `/index.html`
+- **Build Command**: `npm install && npm run build`
+- **Start Command**: `npm run start`
+- **Health Check Path**: `/`
 - **Environment Variables**:
-  - `VITE_API_URL`: Backend API URL (e.g. `https://previa-backend.onrender.com`)
+  - `NEXT_PUBLIC_API_URL`: `https://previa-priz.onrender.com`
+  - `NODE_VERSION`: `20.18.0`
 
 ### 2. Backend Web Service (`previa-backend`)
 - **Type**: `web`
