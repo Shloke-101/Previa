@@ -18,7 +18,6 @@ services:
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
 
     healthCheckPath: /health
-
     autoDeploy: true
 
     envVars:
@@ -46,7 +45,6 @@ services:
   - type: web
     runtime: static
     name: previa-frontend
-    plan: free
     rootDir: frontend
 
     buildCommand: npm install && npm run build:vite
