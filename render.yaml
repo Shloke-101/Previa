@@ -1,17 +1,15 @@
-# Render Blueprint Specification for Previa (PVFC) Full Stack
-# All services configured as Web Services (type: web)
-# Docs: https://render.com/docs/blueprint-spec
+# Render Blueprint Specification for Previa Backend
+# Documentation: https://render.com/docs/blueprint-spec
 
 services:
   # ---------------------------------------------------------------------------
-  # 1. Backend REST API Web Service (FastAPI + Python)
+  # FastAPI REST API Backend Service
   # ---------------------------------------------------------------------------
   - type: web
     name: previa-backend
     runtime: python
     plan: free
     region: oregon
-    rootDir: backend
     buildCommand: pip install --upgrade pip && pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
@@ -30,27 +28,8 @@ services:
           name: previa-postgres
           property: connectionString
 
-  # ---------------------------------------------------------------------------
-  # 2. Frontend Web Service (Next.js + Node)
-  # ---------------------------------------------------------------------------
-  - type: web
-    name: previa-frontend
-    runtime: node
-    plan: free
-    region: oregon
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    startCommand: npm run start
-    healthCheckPath: /
-    autoDeploy: true
-    envVars:
-      - key: NODE_VERSION
-        value: 20.18.0
-      - key: NEXT_PUBLIC_API_URL
-        value: https://previa-priz.onrender.com
-
 # -----------------------------------------------------------------------------
-# 3. Managed PostgreSQL Database
+# Managed PostgreSQL Database
 # -----------------------------------------------------------------------------
 databases:
   - name: previa-postgres
