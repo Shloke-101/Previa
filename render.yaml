@@ -33,7 +33,7 @@ services:
   # ---------------------------------------------------------------------------
   # 2. Frontend Static Site (Vite Single Page Application)
   # ---------------------------------------------------------------------------
-  - type: static
+  - type: static_site
     name: previa-frontend
     plan: free
     region: oregon

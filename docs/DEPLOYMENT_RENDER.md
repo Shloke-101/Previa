@@ -37,7 +37,7 @@ The stack defined in [`render.yaml`](file:///render.yaml):
 ## Service Configurations
 
 ### 1. Frontend Static Site (`previa-frontend`)
-- **Type**: `static` (Static Site)
+- **Type**: `static_site` (Static Site)
 - **Root Directory**: `frontend`
 - **Build Command**: `npm install && npm run build:vite`
 - **Publish Directory**: `dist`
